@@ -1,0 +1,19 @@
+h3 {
+  font-size: 23px;
+}
+.carousel-inner {
+  text-align: left;
+}
+.carousel-control-next:hover {
+  background-color: rgb(165, 167, 165);
+  border-top-left-radius: 40px;
+  border-bottom-left-radius: 40px;
+  width: 10%;
+}
+
+.carousel-control-prev:hover {
+  background-color: rgb(165, 167, 165);
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  width: 10%;
+}
