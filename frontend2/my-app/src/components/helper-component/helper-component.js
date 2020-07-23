@@ -8,24 +8,25 @@ import { Table } from "reactstrap";
 // import { Link } from "react-router-dom";
 function HelperComponent() {
   const [items, setItems] = useState([]);
-  const [users, setUsers] = useState([]);
+  //const [users,setUsers] = useState([])
   useEffect(() => {
     //setItems({loading:true});
+    //   axios.all([
+    //   axios.get('http://localhost:7000/items'),
+    //   axios.get('http://localhost:7000/api/users')
+    // ])
     axios
-      .all([
-        axios.get("http://localhost:7000/items"),
-        axios.get("http://localhost:7000/api/users"),
-      ])
+      .get("http://localhost:7000/match")
       .then((res) => {
-        console.log(res[0].data.length);
-        for (var i = 0; i < res[0].data.length; i++) {
-          if (res[0].data[i].status !== "matching") {
-            delete res[0].data[i];
-            delete res[1].data[i];
+        console.log(res.data.length);
+        console.log(res.data);
+        for (var i = 0; i < res.data.length; i++) {
+          if (res.data[i].status !== "matching") {
+            delete res.data[i];
           }
         }
-        setItems(res[0].data);
-        setUsers(res[1].data);
+        setItems(res.data);
+        //setUsers(res[1].data)
       })
       .catch((err) => {
         console.log(err);
@@ -33,6 +34,8 @@ function HelperComponent() {
   }, []);
   const buttonClick = (item) => {
     //console.log(item)
+    localStorage.setItem("helperJobId", item); //set helper's job id
+
     axios
       .patch("http://localhost:7000/items/" + item + "/", {
         status: "started",
@@ -57,18 +60,18 @@ function HelperComponent() {
               <Table>
                 <thead>
                   <tr>
-                    {/*<th>Location of Reachers</th>*/}
+                    <th>Location of Reachers</th>
                     <th>Job Description</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    {/*<td className="td-1">
-                      {users.map((user) => (
-                        <li key={user.id}>{user.location}</li>
-                      ))} 
-                    </td>*/}
+                    <td className="td-1">
+                      {items.map((item) => (
+                        <li key={item.id}>{item.location}</li>
+                      ))}
+                    </td>
                     <td className="td-2">
                       {items.map((item) => (
                         <li key={item.id}>{item.itemdesc}</li>

@@ -4,7 +4,8 @@ import axios from "axios";
 import { Button } from "reactstrap";
 
 // ID received from Rachita's code:
-var id = localStorage.getItem("jobId");
+
+var id = localStorage.getItem("helperJobId");
 
 const Filler = (props) => {
   return <div className="filler" style={{ width: `${props.percentage}%` }} />;

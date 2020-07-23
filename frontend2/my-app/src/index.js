@@ -11,17 +11,16 @@ import ReacherHelper from "./components/reacher-helper/reacher-helper";
 import ReacherComponent from "./components/reacher-component/reacher-component";
 import HelperComponent from "./components/helper-component/helper-component";
 import Spinnerr from "./components/spinner/spinner";
-import BottomComponent from "./components/bottom-component/bottom-component";
-import ReacherProgress from "./components/status-reacher/status-reacher";
 import ProgressBarExample from "./components/progress-helper/progress-helper";
 import ProgressBarExample2 from "./components/progress-reacher/progress-reacher";
+import History from "./components/history/history";
+
 //import Temp from "./components/temp/temp";
 ReactDOM.render(
   <Router>
     <div>
       <Route path="/" exact component={Navbarr} />
       <Route path="/" exact component={MainView} />
-      <Route path="/" exact component={BottomComponent} />
       <Route path="/loggedin" component={NavbarLoggedIn} />
       <Route path="/loggedin" component={ReacherHelper} />
       <Route path="/loggedin/reacher" component={ReacherComponent} />
@@ -31,6 +30,8 @@ ReactDOM.render(
       <Route path="/reacherProgress" component={ProgressBarExample2} />
       <Route path="/helperProgress" component={NavbarLoggedIn} />
       <Route path="/helperProgress" component={ProgressBarExample} />
+      <Route path="/userHistory" component={NavbarLoggedIn} />
+      <Route path="/userHistory" component={History} />
     </div>
   </Router>,
   document.getElementById("root")

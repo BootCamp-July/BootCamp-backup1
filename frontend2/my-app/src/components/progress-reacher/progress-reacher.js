@@ -32,6 +32,7 @@ class ProgressBarExample2 extends React.Component {
   }
 
   exampleReqs() {
+    console.log(id);
     axios.get("http://localhost:7000/items/" + id + "/", {}).then(
       (response) => {
         console.log(response.data.data.status);
