@@ -6,11 +6,9 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var md5 = require("md5");
-
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "*");
-
   if (req.method == "OPTIONS") {
     res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET");
     return res.status(200).json({});
@@ -18,19 +16,18 @@ app.use((req, res, next) => {
   next();
 });
 // Server port
-var HTTP_PORT = 7000;
+const PORT = process.env.PORT || 7000;
 // Start server
-app.listen(HTTP_PORT, () => {
-  console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT));
+app.listen(PORT, () => {
+  console.log("Server running on port %PORT%".replace("%PORT%", PORT));
 });
 // Root endpoint
 app.get("/", (req, res, next) => {
   res.json({ message: "Ok" });
 });
-
+/////////////////////////////////////////////////////////////USER TABLE/////////////////////////////////////////////////
 // Insert here other API endpoints
 //endpoints for api_users table
-
 //Get list of entities- /api/users
 app.get("/api/users/", (req, res, next) => {
   var sql = "select * from api_user";
@@ -58,7 +55,6 @@ app.get("/api/users/:id", (req, res, next) => {
     });
   });
 });
-
 //adding new user-Post request
 app.post("/api/users", (req, res, next) => {
   var errors = [];
@@ -102,11 +98,10 @@ app.post("/api/users", (req, res, next) => {
     });
   });
 });
-
 //Updating user-Patch request
 app.patch("/api/users/:id", (req, res, next) => {
   var data = [
-    md5(req.body.password),
+    req.body.password,
     req.body.username,
     req.body.location,
     req.body.phone,
@@ -115,7 +110,7 @@ app.patch("/api/users/:id", (req, res, next) => {
     req.params.id,
   ];
   db.run(
-    `UPDATE api_user set 
+    `UPDATE api_user set
         password = COALESCE(?,password),
         username = COALESCE(?,username),
         location = COALESCE(?,location),
@@ -137,7 +132,6 @@ app.patch("/api/users/:id", (req, res, next) => {
     }
   );
 });
-
 // DELETE Request
 app.delete("/api/users/:id", (req, res, next) => {
   db.run("DELETE FROM api_user WHERE id = ?", req.params.id, function (
@@ -151,9 +145,8 @@ app.delete("/api/users/:id", (req, res, next) => {
     res.json({ message: "deleted", changes: this.changes });
   });
 });
-
+///////////////////////////////////////////////////////////////ITEMS TABLE///////////////////////////////////////////
 //API End points for items table
-
 //Get list of items
 app.get("/items", (req, res, next) => {
   var sql = "select * from items";
@@ -181,14 +174,12 @@ app.get("/items/:id", (req, res, next) => {
     });
   });
 });
-
 //adding new item-Post request
 app.post("/items", (req, res, next) => {
   var errors = [];
   if (!req.body.itemdesc) {
     errors.push("No description given");
   }
-
   if (errors.length) {
     res.status(400).json({ error: errors.join(",") });
     return;
@@ -198,16 +189,29 @@ app.post("/items", (req, res, next) => {
     status: req.body.status,
     helper_id: req.body.helper_id,
     reacher_id: req.body.reacher_id,
+    price: req.body.price,
+    helper_score: req.body.helper_score,
+    reacher_score: req.body.reacher_score,
   };
-
   var sql =
-    "INSERT INTO items (itemdesc,status,helper_id,reacher_id ) VALUES (?,?,?,?)";
-  var params = [data.itemdesc, data.status, data.helper_id, data.reacher_id];
+    "INSERT INTO items (itemdesc,status,helper_id,reacher_id,price,helper_score,reacher_score ) VALUES (?,?,?,?,?,?,?)";
+  var params = [
+    data.itemdesc,
+    data.status,
+    data.helper_id,
+    data.reacher_id,
+    data.price,
+    data.helper_score,
+    data.reacher_score,
+  ];
   var item = [
     req.body.itemdesc,
     req.body.status,
     req.body.helper_id,
     req.body.reacher_id,
+    req.body.price,
+    req.body.helper_score,
+    req.body.reacher_score,
     req.params.id,
   ];
   db.run(sql, params, function (err, result) {
@@ -220,7 +224,6 @@ app.post("/items", (req, res, next) => {
     });
   });
 });
-
 //Updating user-Patch request
 app.patch("/items/:id", (req, res, next) => {
   var data = [
@@ -228,14 +231,20 @@ app.patch("/items/:id", (req, res, next) => {
     req.body.status,
     req.body.helper_id,
     req.body.reacher_id,
+    req.body.price,
+    req.body.helper_score,
+    req.body.reacher_score,
     req.params.id,
   ];
   db.run(
-    `UPDATE items set 
+    `UPDATE items set
         itemdesc = COALESCE(?,itemdesc),
         status = COALESCE(?,status),
         helper_id = COALESCE(?,helper_id),
-        reacher_id = COALESCE(?,reacher_id)
+        reacher_id = COALESCE(?,reacher_id),
+        price = COALESCE(?,price),
+        helper_score = COALESCE(?,helper_score),
+        reacher_score = COALESCE(?,reacher_score)
         WHERE id = ?`,
     data,
     (err, result) => {
@@ -251,7 +260,6 @@ app.patch("/items/:id", (req, res, next) => {
     }
   );
 });
-
 // DELETE Request
 app.delete("/items/:id", (req, res, next) => {
   db.run("DELETE FROM items WHERE id = ?", req.params.id, function (
@@ -265,7 +273,19 @@ app.delete("/items/:id", (req, res, next) => {
     res.json({ message: "deleted", changes: this.changes });
   });
 });
-
+// The API for MATCHING
+app.get("/match", (req, res, next) => {
+  var sql =
+    "select * from api_user JOIN items on api_user.id = items.reacher_id";
+  var params = [];
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json(rows);
+  });
+});
 // Default response for any other request
 app.use(function (req, res) {
   res.status(404);

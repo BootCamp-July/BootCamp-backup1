@@ -80,11 +80,12 @@ td li {
   padding-left: 10px;
   padding-bottom: 10px;
 }
-.td-1 {
+.td-1,
+.td-2 {
   border-right: #dacdcd 1px solid;
   border-left: #dacdcd 1px solid;
 }
-.td-3 {
+.td-4 {
   border-right: #dacdcd 1px solid;
 }
 tr {

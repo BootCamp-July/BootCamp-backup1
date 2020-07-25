@@ -1,95 +1,62 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Container } from "reactstrap";
 import "./user-profile.css";
 import axios from "axios";
-import { TabPane, Row, Col ,Button} from "reactstrap";
+import { TabPane, Row, Col, Button } from "reactstrap";
 import { Table } from "reactstrap";
-import NavbarLoggedIn from "../nav-bar-loggedin/nav-bar-loggedin";
 
 function UserProfile() {
-  
-  
-  const [users,setUsers] = useState([])
+  const [users, setUsers] = useState([]);
+  var username = localStorage.getItem("username");
 
-  useEffect(()=>{
-   
-  axios.get('http://localhost:7000/api/users/')
-    .then(res =>{
-  
-    console.log(res.data.length);
-    console.log(res.data)
+  useEffect(() => {
+    axios
+      .get("http://localhost:7000/api/users/")
+      .then((res) => {
+        console.log(res.data.length);
+        console.log(res.data);
 
-   
-    setUsers(res.data)
-    
+        for (var i = 0; i < res.data.length; i++) {
+          if (res.data[i].username == username) {
+            localStorage.setItem("location", res.data[i].location); //set updated user location
+          }
+        }
+
+        setUsers(res.data);
       })
-    .catch(err => {
-      console.log(err)
-    })
-      
-  
-  },[])
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-  
-  
+  var location = localStorage.getItem("location");
+  var phone = localStorage.getItem("phonenumber");
+  var username_modified = username.charAt(0).toUpperCase() + username.slice(1);
+  var id = localStorage.getItem("id");
 
+  console.log(
+    localStorage.getItem("location"), //location check
+    localStorage.getItem("username"), //username check
+    localStorage.getItem("phonenumber"), //phonenumber check
+    localStorage.getItem("id"), //id check
+    localStorage.getItem("jobId"), //jobId check
+    localStorage.getItem("helperJobId") //helperJobId check
+  );
   return (
-    <div >
-    <NavbarLoggedIn />
-    
-    
+    <div>
       <Container>
-      
-      
-      <Row>
-      <Col sm="2"></Col>
-      <Col sm="8">
-          
-          <Table className="usertable">
-              <thead>
-                  <tr>
-                  <th>Username</th>
-                  <th>Location</th>
-                  <th>Phone No</th>
-                  <th>Email Id</th>
-                  <th>Net Profile Score</th>
-                  
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                    <td className="td-1">
-                    {users.map( user =>(
-                      <li  key = {user.id}>{user.username}</li>))}
-                    </td> 
-                      
-                    <td className="td-1">
-                    {users.map( user =>(
-                      <li  key = {user.id}>{user.location}</li>))}
-                    </td>
-                    <td className="td-1">
-                    {users.map( user =>(
-                      <li  key = {user.id}>{user.phone}</li>))}
-                    </td> 
-                      
-                      <td className="td-1">
-                    {users.map( user =>(
-                      <li  key = {user.id}>{user.email}</li>))}
-                      </td> 
-
-                      <td className="td-1"></td>
-                  </tr>
-                     
-              </tbody>
-          </Table>
-          
-      </Col>
-      <Col sm="2"></Col>
-      </Row>
-  
-    </Container>
+        <center>
+          <u>
+            <h3>{username_modified}'s Profile</h3>
+          </u>
+          <br />
+          <h3>Username: {username}</h3> <br />
+          <h3>Unique Id: {id}</h3> <br />
+          <h3>Phone: {phone}</h3> <br />
+          <h3>Location: {location}</h3> <br />
+        </center>
+      </Container>
     </div>
-    
   );
 }
 

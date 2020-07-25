@@ -14,6 +14,7 @@ import Spinnerr from "./components/spinner/spinner";
 import ProgressBarExample from "./components/progress-helper/progress-helper";
 import ProgressBarExample2 from "./components/progress-reacher/progress-reacher";
 import History from "./components/history/history";
+import UserProfile from "./components/user-profile/user-profile";
 
 //import Temp from "./components/temp/temp";
 ReactDOM.render(
@@ -32,6 +33,8 @@ ReactDOM.render(
       <Route path="/helperProgress" component={ProgressBarExample} />
       <Route path="/userHistory" component={NavbarLoggedIn} />
       <Route path="/userHistory" component={History} />
+      <Route path="/userProfile" component={NavbarLoggedIn} />
+      <Route path="/userProfile" component={UserProfile} />
     </div>
   </Router>,
   document.getElementById("root")

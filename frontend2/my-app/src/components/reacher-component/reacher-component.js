@@ -17,6 +17,8 @@ class ReacherComponent extends Component {
   //fetch code
   state = {
     joke: "",
+    location: localStorage.getItem("location"),
+    id: localStorage.getItem("id"),
   };
 
   serviceState = {
@@ -25,6 +27,9 @@ class ReacherComponent extends Component {
       reacher_id: localStorage.getItem("id"),
       status: "matching",
       helper_id: "0",
+      reacher_score: 0,
+      helper_score: 0,
+      price: 0,
     },
   };
 
@@ -32,6 +37,24 @@ class ReacherComponent extends Component {
     console.log(this.serviceState.serviceDetails);
     const ValidateService = this.serviceState.serviceDetails;
     const Itemdesc = ValidateService.itemdesc;
+
+    const user = {
+      location: this.state.location,
+    };
+    console.log("userlocation", user.location);
+    console.log("userprice", this.serviceState.serviceDetails.price);
+    axios
+      .patch("http://localhost:7000/api/users/" + this.state.id + "/", {
+        //patch location
+        location: user.location,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     if (Itemdesc === "") {
       alert("Please specify a job");
@@ -46,6 +69,37 @@ class ReacherComponent extends Component {
     })
       .then((data) => data.json())
       .catch((error) => console.error(error));
+  };
+
+  // patchService = (event) => {
+  //   console.log(this.state.id);
+  //   event.preventDefault();
+  //   const user = {
+  //     location: this.state.location,
+  //   };
+  //   axios
+  //     .patch("http://localhost:7000/api/users/" + this.state.id + "/", {
+  //       location: user.location,
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  //Location patch event
+  handleChange = (patchevent) => {
+    this.setState({ location: patchevent.target.value });
+  };
+
+  //Price patch event
+  inputChangedPrice = (event) => {
+    const cred = this.serviceState.serviceDetails;
+    cred[event.target.name] = event.target.value;
+    this.setState({ serviceDetails: cred });
   };
 
   //service event
@@ -72,7 +126,8 @@ class ReacherComponent extends Component {
                   <thead>
                     <tr>
                       <th>Enter Job Description</th>
-                      {/*<th>Enter Current Location</th>*/}
+                      <th>Enter Current Location</th>
+                      <th>Price</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -93,7 +148,6 @@ class ReacherComponent extends Component {
                           </FormGroup>
                         </Form>
                       </td>
-                      {/*
                       <td>
                         <Form>
                           <FormGroup>
@@ -103,10 +157,28 @@ class ReacherComponent extends Component {
                               name="location"
                               id="location"
                               placeholder="Where are you currently?"
+                              value={this.state.location}
+                              onChange={this.handleChange}
                             />
                           </FormGroup>
                         </Form>
-                      </td>*/}
+                      </td>
+
+                      <td>
+                        <Form>
+                          <FormGroup>
+                            <Label for="Price"></Label>
+                            <Input
+                              type="number"
+                              name="price"
+                              id="price"
+                              placeholder="$"
+                              value={this.state.price}
+                              onChange={this.inputChangedPrice}
+                            />
+                          </FormGroup>
+                        </Form>
+                      </td>
                     </tr>
                   </tbody>
                 </Table>

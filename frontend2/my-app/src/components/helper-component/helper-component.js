@@ -4,20 +4,15 @@ import "./helper-component.css";
 import axios from "axios";
 import { TabPane, Row, Col, Button } from "reactstrap";
 import { Table } from "reactstrap";
-// import { Form, FormGroup, Label, Input } from "reactstrap";
-// import { Link } from "react-router-dom";
+
 function HelperComponent() {
   const [items, setItems] = useState([]);
   //const [users,setUsers] = useState([])
   useEffect(() => {
-    //setItems({loading:true});
-    //   axios.all([
-    //   axios.get('http://localhost:7000/items'),
-    //   axios.get('http://localhost:7000/api/users')
-    // ])
     axios
       .get("http://localhost:7000/match")
       .then((res) => {
+        console.log("response.data.data", res);
         console.log(res.data.length);
         console.log(res.data);
         for (var i = 0; i < res.data.length; i++) {
@@ -49,19 +44,21 @@ function HelperComponent() {
       });
     window.location.href = "/helperProgress/";
   };
+
   return (
     <div className="main-div-helper">
       <Container>
         <TabPane tabId="2">
           <Row>
-            <Col sm="3"></Col>
-            <Col sm="6">
+            <Col sm="2"></Col>
+            <Col sm="8">
               <h4>Reachers you can help now!</h4>
               <Table>
                 <thead>
                   <tr>
                     <th>Location of Reachers</th>
                     <th>Job Description</th>
+                    <th>Service Amount</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -79,6 +76,11 @@ function HelperComponent() {
                     </td>
                     <td className="td-3">
                       {items.map((item) => (
+                        <li key={item.id}>{item.price}</li>
+                      ))}
+                    </td>
+                    <td className="td-4">
+                      {items.map((item) => (
                         <li key={item.id}>
                           <input
                             id={item.id}
@@ -93,7 +95,7 @@ function HelperComponent() {
                 </tbody>
               </Table>
             </Col>
-            <Col sm="3"></Col>
+            <Col sm="2"></Col>
           </Row>
         </TabPane>
       </Container>

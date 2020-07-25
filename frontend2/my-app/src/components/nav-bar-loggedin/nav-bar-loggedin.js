@@ -13,14 +13,16 @@ const NavbarLoggedIn = (props) => {
   return (
     <div>
       <Navbar>
-        <NavbarBrand href="/" className="mr-auto">
+        <NavbarBrand href="/loggedin" className="mr-auto">
           <img src={logo} alt="logo" className="logo-nav-bar" />
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-3" />
         <Collapse isOpen={!collapsed} navbar>
           <Nav navbar>
             <NavItem className="nav-links">
-              <NavLink href="http://localhost:3000/user_info">Profile</NavLink>
+              <NavLink href="http://localhost:3000/userProfile">
+                Profile
+              </NavLink>
             </NavItem>
             <NavItem>
               <NavLink href="http://localhost:3000/userHistory">
