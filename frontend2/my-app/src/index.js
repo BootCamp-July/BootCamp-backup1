@@ -15,8 +15,10 @@ import ProgressBarExample from "./components/progress-helper/progress-helper";
 import ProgressBarExample2 from "./components/progress-reacher/progress-reacher";
 import History from "./components/history/history";
 import UserProfile from "./components/user-profile/user-profile";
+import Score from "./components/score/score";
 
-//import Temp from "./components/temp/temp";
+import Temp from "./components/temp/temp";
+
 ReactDOM.render(
   <Router>
     <div>
@@ -26,7 +28,7 @@ ReactDOM.render(
       <Route path="/loggedin" component={ReacherHelper} />
       <Route path="/loggedin/reacher" component={ReacherComponent} />
       <Route path="/loggedin/helper" component={HelperComponent} />
-      <Route path="/loggedin/matching" component={Spinnerr} />
+      <Route path="/matching" component={Spinnerr} />
       <Route path="/reacherProgress" component={NavbarLoggedIn} />
       <Route path="/reacherProgress" component={ProgressBarExample2} />
       <Route path="/helperProgress" component={NavbarLoggedIn} />

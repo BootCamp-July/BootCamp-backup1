@@ -3,6 +3,8 @@ var express = require("express");
 var app = express();
 var db = require("./database.js");
 var bodyParser = require("body-parser");
+//var nodemailer = require(‘nodemailer’);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var md5 = require("md5");
@@ -192,9 +194,10 @@ app.post("/items", (req, res, next) => {
     price: req.body.price,
     helper_score: req.body.helper_score,
     reacher_score: req.body.reacher_score,
+    bargain_price: req.body.bargain_price,
   };
   var sql =
-    "INSERT INTO items (itemdesc,status,helper_id,reacher_id,price,helper_score,reacher_score ) VALUES (?,?,?,?,?,?,?)";
+    "INSERT INTO items (itemdesc,status,helper_id,reacher_id,price,helper_score,reacher_score,bargain_price ) VALUES (?,?,?,?,?,?,?,?)";
   var params = [
     data.itemdesc,
     data.status,
@@ -203,6 +206,7 @@ app.post("/items", (req, res, next) => {
     data.price,
     data.helper_score,
     data.reacher_score,
+    data.bargain_price,
   ];
   var item = [
     req.body.itemdesc,
@@ -212,6 +216,7 @@ app.post("/items", (req, res, next) => {
     req.body.price,
     req.body.helper_score,
     req.body.reacher_score,
+    req.body.bargain_price,
     req.params.id,
   ];
   db.run(sql, params, function (err, result) {
@@ -234,6 +239,7 @@ app.patch("/items/:id", (req, res, next) => {
     req.body.price,
     req.body.helper_score,
     req.body.reacher_score,
+    req.body.bargain_price,
     req.params.id,
   ];
   db.run(
@@ -244,7 +250,8 @@ app.patch("/items/:id", (req, res, next) => {
         reacher_id = COALESCE(?,reacher_id),
         price = COALESCE(?,price),
         helper_score = COALESCE(?,helper_score),
-        reacher_score = COALESCE(?,reacher_score)
+        reacher_score = COALESCE(?,reacher_score),
+        bargain_price = COALESCE(?,bargain_price)
         WHERE id = ?`,
     data,
     (err, result) => {
@@ -286,6 +293,37 @@ app.get("/match", (req, res, next) => {
     res.json(rows);
   });
 });
+
+//E-mail Service
+
+app.post("/mail", (req, res, next) => {
+  var data = {
+    email: req.body.email_id,
+  };
+  const nodemailer = require("nodemailer");
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "errands.com2020@gmail.com",
+      pass: "mcdonalds123",
+    },
+  });
+  let mailOptions = {
+    from: "errands.com2020@gmail.com",
+    to: data.email,
+    subject: "Your job has been completed!",
+    text: "Congratulations! Your job has been completed, do rate your helper! ",
+  };
+  transporter.sendMail(mailOptions, function (err, data) {
+    if (err) {
+      console.log("Error Occured", err);
+    } else {
+      console.log("Email sent!");
+    }
+  });
+  res.json({ message: "Ok" });
+});
+
 // Default response for any other request
 app.use(function (req, res) {
   res.status(404);

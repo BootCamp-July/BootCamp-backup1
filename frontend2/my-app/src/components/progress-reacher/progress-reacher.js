@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./progress-reacher.css";
 import axios from "axios";
+import FeedbackReacher from "../feedback_reacher/feedback_reacher";
 
 // ID received from Rachita's code:
 var id = localStorage.getItem("jobId");
@@ -26,6 +27,7 @@ class ProgressBarExample2 extends React.Component {
     this.state = {
       progress: "started",
       percentage: 0,
+      feedback: false,
     };
 
     this.exampleReqs = this.exampleReqs.bind(this);
@@ -43,7 +45,11 @@ class ProgressBarExample2 extends React.Component {
         } else if (response.data.status === "inprog") {
           this.setState({ percentage: 50, progress: "is in progress" });
         } else if (response.data.status === "completed") {
-          this.setState({ percentage: 100, progress: "is Done !" });
+          this.setState({
+            percentage: 100,
+            progress: "is Done !",
+            feedback: true,
+          });
         }
       },
       (error) => {
@@ -77,6 +83,11 @@ class ProgressBarExample2 extends React.Component {
           <br />
           <h3> Your job {this.state.progress}</h3>
         </center>
+        <br />
+        <br />
+        <br />
+        {/* prettier-ignore */}
+        {this.state.feedback ? <FeedbackReacher /> : <></>}
       </div>
     );
   }

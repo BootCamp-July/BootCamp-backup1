@@ -38,7 +38,8 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
       reacher_id INTEGER,
       price      INTEGER,
       helper_score INTEGER,
-      reacher_score INTEGER
+      reacher_score INTEGER,
+      bargain_price      INTEGER
       )`,
       (err) => {
         if (err) {

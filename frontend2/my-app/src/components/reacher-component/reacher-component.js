@@ -29,7 +29,8 @@ class ReacherComponent extends Component {
       helper_id: "0",
       reacher_score: 0,
       helper_score: 0,
-      price: 0,
+      price: "",
+      bargain_price: 0,
     },
   };
 
@@ -37,6 +38,7 @@ class ReacherComponent extends Component {
     console.log(this.serviceState.serviceDetails);
     const ValidateService = this.serviceState.serviceDetails;
     const Itemdesc = ValidateService.itemdesc;
+    const price = ValidateService.price;
 
     const user = {
       location: this.state.location,
@@ -58,8 +60,11 @@ class ReacherComponent extends Component {
 
     if (Itemdesc === "") {
       alert("Please specify a job");
+    } else if (price === "") {
+      alert("Please specify a price");
     } else {
-      window.location.href = "/loggedin/matching";
+      localStorage.setItem("reacherInitialPrice", ValidateService.price); //set the initial price for reacher
+      window.location.href = "/matching";
     }
 
     fetch("http://127.0.0.1:8000/api/jobs/", {
@@ -116,12 +121,14 @@ class ReacherComponent extends Component {
           <TabPane tabId="1">
             <Row>
               <Col sm="12">
-                <h4>What service do you require?</h4>
+                <center>
+                  <h4>What service do you require?</h4>
+                </center>
               </Col>
             </Row>
             <Row>
-              <Col sm="3"></Col>
-              <Col sm="6">
+              <Col sm="2"></Col>
+              <Col sm="8">
                 <Table>
                   <thead>
                     <tr>

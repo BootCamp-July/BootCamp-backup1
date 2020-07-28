@@ -91,3 +91,11 @@ td li {
 tr {
   border-bottom: #dacdcd 1px solid;
 }
+.td-5 {
+  border-right: #dacdcd 1px solid;
+}
+.helper-table .td-1 li,
+.helper-table .td-2 li,
+.helper-table .td-3 li {
+  padding-top: 10px;
+}

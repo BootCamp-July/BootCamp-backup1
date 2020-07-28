@@ -18,6 +18,11 @@ import HelperComponent from "../helper-component/helper-component";
 import SideNav from "../side-nav/side-nav";
 
 const ReacherHelper = (props) => {
+  if (localStorage.getItem("username") === "#") {
+    //restrict unauthorized users from logging in
+    window.location.href = "/";
+  }
+
   var username = localStorage.getItem("username");
   var username_modified = username.charAt(0).toUpperCase() + username.slice(1);
 

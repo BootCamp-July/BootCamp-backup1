@@ -21,6 +21,7 @@ class Items(models.Model):
     price = models.IntegerField()
     reacher_score = models.IntegerField()
     helper_score = models.IntegerField()
+    bargain_price = models.IntegerField()
     class Meta:
         db_table = "items"
 

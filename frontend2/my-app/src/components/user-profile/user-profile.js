@@ -4,8 +4,14 @@ import "./user-profile.css";
 import axios from "axios";
 import { TabPane, Row, Col, Button } from "reactstrap";
 import { Table } from "reactstrap";
+import Score from "../score/score";
 
 function UserProfile() {
+  if (localStorage.getItem("username") === "#") {
+    //restrict unauthorized users from logging in
+    window.location.href = "/";
+  }
+
   const [users, setUsers] = useState([]);
   var username = localStorage.getItem("username");
 
@@ -45,17 +51,46 @@ function UserProfile() {
   return (
     <div>
       <Container>
-        <center>
-          <u>
-            <h3>{username_modified}'s Profile</h3>
-          </u>
-          <br />
-          <h3>Username: {username}</h3> <br />
-          <h3>Unique Id: {id}</h3> <br />
-          <h3>Phone: {phone}</h3> <br />
-          <h3>Location: {location}</h3> <br />
-        </center>
+        <TabPane tabId="2">
+          <Row>
+            <Col sm="2"></Col>
+            <Col sm="8">
+              <center>
+                <h4 className="table-header">{username_modified}'s Profile</h4>
+              </center>
+
+              <Table>
+                <tbody>
+                  <tr>
+                    <td className="td-1">Username</td>
+                    <td className="td-3">{username}</td>
+                  </tr>
+                  <tr>
+                    <td className="td-1">Unique Id</td>
+                    <td className="td-3">{id}</td>
+                  </tr>
+                  <tr>
+                    <td className="td-1">Phone</td>
+                    <td className="td-3">{phone}</td>
+                  </tr>
+                  <tr>
+                    <td className="td-1">Location</td>
+                    <td className="td-3">{location}</td>
+                  </tr>
+                  <tr>
+                    <td className="td-1">NPS Score</td>
+                    <td className="td-3">
+                      <Score></Score>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+            </Col>
+            <Col sm="2"></Col>
+          </Row>
+        </TabPane>
       </Container>
+      <br />
     </div>
   );
 }
