@@ -15,9 +15,8 @@ import ProgressBarExample from "./components/progress-helper/progress-helper";
 import ProgressBarExample2 from "./components/progress-reacher/progress-reacher";
 import History from "./components/history/history";
 import UserProfile from "./components/user-profile/user-profile";
-import Score from "./components/score/score";
 
-import Temp from "./components/temp/temp";
+import SearchMap from "./components/search-maps/search-maps";
 
 ReactDOM.render(
   <Router>
@@ -37,6 +36,7 @@ ReactDOM.render(
       <Route path="/userHistory" component={History} />
       <Route path="/userProfile" component={NavbarLoggedIn} />
       <Route path="/userProfile" component={UserProfile} />
+      <Route path="/searchMaps" component={SearchMap} />
     </div>
   </Router>,
   document.getElementById("root")

@@ -45,6 +45,7 @@ class ReacherComponent extends Component {
     };
     console.log("userlocation", user.location);
     console.log("userprice", this.serviceState.serviceDetails.price);
+
     axios
       .patch("http://localhost:7000/api/users/" + this.state.id + "/", {
         //patch location
@@ -63,6 +64,7 @@ class ReacherComponent extends Component {
     } else if (price === "") {
       alert("Please specify a price");
     } else {
+      //this.getCoordinates(user.location); //get the user coordinates
       localStorage.setItem("reacherInitialPrice", ValidateService.price); //set the initial price for reacher
       window.location.href = "/matching";
     }
@@ -90,6 +92,37 @@ class ReacherComponent extends Component {
   //       console.log(res);
   //       console.log(res.data);
   //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+  // getCoordinates = (place) => {
+  //   //set the user coordinates
+
+  //   axios
+  //     .get(
+  //       "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+  //         place +
+  //         ".json?access_token=pk.eyJ1IjoiZGFzaC1udW0iLCJhIjoiY2tkNXNtMDduMGF2djJ0cmE1MjJ0aHNpOSJ9.4FgclywHobtPkxbpi_c-DQ"
+  //     )
+
+  //     .then((response) => {
+  //       console.log("resp", response.data.features[1].center);
+  //       localStorage.setItem(
+  //         "reacherLat",
+  //         parseFloat(response.data.features[1].center[1])
+  //       );
+  //       localStorage.setItem(
+  //         "reacherLong",
+  //         parseFloat(response.data.features[1].center[0])
+  //       );
+  //       console.log(
+  //         "lat, long",
+  //         localStorage.getItem("reacherLat"),
+  //         localStorage.getItem("reacherLong")
+  //       );
+  //     })
+
   //     .catch((err) => {
   //       console.log(err);
   //     });

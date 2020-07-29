@@ -11,6 +11,7 @@ import {
 import "./spinner.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import SearchMaps from "../search-maps/search-maps";
 class Spinnerr extends Component {
   state = {
     joke: "",
@@ -24,6 +25,15 @@ class Spinnerr extends Component {
       console.log(response);
     });
     console.log(localStorage.getItem("jobId"));
+  }
+
+  locationUser() {
+    console.log(
+      "user coords",
+
+      localStorage.getItem("reacherLat"),
+      localStorage.getItem("reacherLong")
+    );
   }
 
   fetchHelpers() {
@@ -46,17 +56,80 @@ class Spinnerr extends Component {
         window.location.href = "/reacherProgress"; //locate user to the job status
       } else if (response.data[localStorage.getItem("jobIndex")].status =="helperNegotiate") {
         console.log("negotiated price",response.data[localStorage.getItem("jobIndex")].bargain_price);
+        this.setHelperLocation(response.data[localStorage.getItem("jobIndex")].helper_id);
         this.setState({
           newPrice:response.data[localStorage.getItem("jobIndex")].bargain_price
         })
       }
     });
   }
+  setReacherCoordinates(place) {
+    //set the helper coordinates
+
+    axios
+      .get(
+        "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+          place +
+          ".json?access_token=pk.eyJ1IjoiZGFzaC1udW0iLCJhIjoiY2tkNXNtMDduMGF2djJ0cmE1MjJ0aHNpOSJ9.4FgclywHobtPkxbpi_c-DQ"
+      )
+      /* preetier-ignore */
+      .then((response) => {
+        localStorage.setItem("reacherLat", response.data.features[1].center[1]);
+        localStorage.setItem(
+          "reacherLong",
+          response.data.features[1].center[0]
+        );
+      });
+  }
+
+  setHelperCoordinates(place) {
+    //set the helper coordinates
+
+    axios
+      .get(
+        "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+          place +
+          ".json?access_token=pk.eyJ1IjoiZGFzaC1udW0iLCJhIjoiY2tkNXNtMDduMGF2djJ0cmE1MjJ0aHNpOSJ9.4FgclywHobtPkxbpi_c-DQ"
+      )
+      .then((response) => {
+        localStorage.setItem("helperCoords", 1);
+        localStorage.setItem("helperLat", response.data.features[1].center[1]);
+        localStorage.setItem("helperLong", response.data.features[1].center[0]);
+      });
+  }
+  setHelperLocation(helper_id) {
+    console.log("helper_id", helper_id);
+    axios
+      .get("http://127.0.0.1:8000/api/users/" + helper_id + "/")
+      .then((response) => {
+        this.setHelperCoordinates(response.data.location); //give --> response.data.location
+        localStorage.setItem("tempHelper", response.data.username);
+      });
+  }
 
   componentDidMount() {
+    //set reachers location
+    axios
+      .get(
+        "http://127.0.0.1:8000/api/users/" + localStorage.getItem("id") + "/"
+      )
+
+      .then((response) => {
+        console.log(response.data.location);
+        this.setReacherCoordinates(response.data.location);
+      });
+
+    console.log(
+      "lat, long",
+      localStorage.getItem("reacherLat"),
+      localStorage.getItem("reacherLong")
+    );
+    //setReacherCoordinates("NewYork");
     this.setJobId(); //set the jobId
+    this.locationUser(); //check the coordinates
     //Fetch the API request every 4 seconds
     console.log(this.fetchHelpers());
+    //location.reload();
     this.interval = setInterval(() => {
       this.fetchHelpers();
     }, 4000); //every 40sec
@@ -92,6 +165,8 @@ class Spinnerr extends Component {
 
   Reject() {
     //patch job status to matching
+    localStorage.setItem("helperCoords", 0);
+    localStorage.setItem("tempHelper", "");
     axios
       .patch(
         "http://localhost:7000/items/" + localStorage.getItem("jobId") + "/",
@@ -108,6 +183,7 @@ class Spinnerr extends Component {
       .catch((err) => {
         console.log(err);
       });
+    //window.location.href=""
   }
 
   Negotiate() {
@@ -134,6 +210,10 @@ class Spinnerr extends Component {
   }
 
   DeleteRequest() {
+    localStorage.setItem("helperCoords", 0);
+    localStorage.setItem("reacherLat", 21.120221);
+    localStorage.setItem("reacherLong", 72.74369);
+    localStorage.setItem("tempHelper", "");
     axios
       .delete(
         "http://127.0.0.1:8000/api/jobs/" + localStorage.getItem("jobId") + "/"
@@ -152,20 +232,27 @@ class Spinnerr extends Component {
   render() {
     return (
       <div className="loading">
-        <Spinner color="primary" />
+        {/* <Spinner color="primary" />
         <br />
         <br />
-        <h3>Looking for Helpers..</h3>
+        <h3>Looking for Helpers..</h3> */}
         <p>{this.state.joke}</p>
-        <br />
 
+        <br />
+        <div className="searchMaps">
+          <SearchMaps
+            lat={localStorage.getItem("reacherLat")}
+            long={localStorage.getItem("reacherLong")}
+          ></SearchMaps>
+        </div>
+
+        <br />
+        <br />
         <Button color="danger" onClick={() => this.DeleteRequest()}>
-          Stop
+          Cancel
         </Button>
         <br />
         <br />
-        <br />
-
         {this.state.joke === "helperNegotiate" ? (
           <Container>
             <TabPane tabId="2">
