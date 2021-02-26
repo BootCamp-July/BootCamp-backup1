@@ -14,7 +14,6 @@
   margin-bottom: 0;
   list-style: none;
 }
-
 .nav-item-1 {
   color: #000;
   background-color: #ebebeb;
@@ -38,7 +37,6 @@
   border-bottom-right-radius: 50px;
   border-top-right-radius: 50px;
 }
-
 ul {
   margin-top: 0px;
   padding-left: 0;
@@ -48,17 +46,14 @@ ul {
   width: 300px;
   height: 50px;
 }
-
 ul li {
   display: block;
   margin: auto;
 }
-
 .tab-content {
   margin-top: 100px;
   text-align: center;
 }
-
 h4 {
   color: #4e4b4b;
   margin-bottom: 50px;
@@ -69,7 +64,6 @@ thead {
 th {
   color: #fff;
 }
-
 .btn-secondary {
   color: #fff;
   background-color: #008db1;
@@ -77,17 +71,18 @@ th {
   border-color: #008db1;
   margin-bottom: 50px;
 }
-
 .main-div-reacher {
-  margin-top: 4%;
   text-align: center;
+  margin-top: 100px;
 }
-
 .main-div-helper {
-  margin-top: 4%;
   text-align: center;
+  margin-top: 100px;
 }
 .loading {
   margin-top: 4%;
   text-align: center;
+}
+.td-3 li {
+  padding-bottom: 34px;
 }

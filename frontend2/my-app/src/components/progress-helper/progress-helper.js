@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./progress-helper.css";
 import axios from "axios";
 import { Button } from "reactstrap";
+import FeedbackHelper from "../feedback_helper/feedback_helper";
 
 // ID received from Rachita's code:
-var id = localStorage.getItem("jobId");
+
+var id = localStorage.getItem("helperJobId");
 
 const Filler = (props) => {
   return <div className="filler" style={{ width: `${props.percentage}%` }} />;
@@ -26,6 +28,7 @@ class ProgressBarExample extends React.Component {
 
     this.state = {
       percentage: 0,
+      feedback: false,
     };
 
     this.nextStep = this.nextStep.bind(this);
@@ -39,9 +42,8 @@ class ProgressBarExample extends React.Component {
   }
 
   finalStep() {
-    this.setState({ percentage: 100 });
+    this.setState({ percentage: 100, feedback: true });
     this.finalReqs();
-    window.location.href = "/loggedin/";
   }
 
   exampleReqs() {
@@ -72,6 +74,15 @@ class ProgressBarExample extends React.Component {
           console.log(error);
         }
       );
+
+    /////
+    axios
+      .post("http://localhost:7000/mail/", {
+        email_id: "darshan.sheth@numerator.com",
+      })
+      .then(function (response) {
+        console.log(response);
+      });
   }
 
   render() {
@@ -99,36 +110,14 @@ class ProgressBarExample extends React.Component {
             Complete
           </Button>
         </div>
-
-        {/* <div
-          style={{ marginTop: "10px", color: "blue", marginBottom: "15px" }}
-          onClick={() => this.setState({ percentage: 0 })}
-        >
-          Reset
-        </div>*/}
+        <br />
+        <br />
+        <br />
+        {/* prettier-ignore */}
+        {this.state.feedback ? <FeedbackHelper></FeedbackHelper> : <></>}
       </div>
     );
   }
 }
 
-export default ProgressBarExample; // Exported here
-
-// Needs to send a PATCH for every click
-// Axios stuff:
-
-// axios.get("http://127.0.0.1:8000/api/users/").then((response) => {
-//     for (var i = 0; i < response.data.length; i++) {
-//       if (response.data[i].username === username) {
-//         localStorage.setItem("id", response.data[i].id);
-//         console.log(response.data[i].id, response.data[i].username);
-//       }
-//     }
-//   });
-
-// axios.patch("http://127.0.0.1:3000/api/users/", {
-//   status: 'InProg'
-// });
-//
-// axios.get("http://127.0.0.1:8000/api/users/").then((response) => {
-//     console.log(response);
-//   });
+export default ProgressBarExample;

@@ -18,6 +18,10 @@ class Items(models.Model):
     status = models.CharField(max_length=50)
     helper_id = models.IntegerField()
     reacher_id = models.IntegerField()
+    price = models.IntegerField()
+    reacher_score = models.IntegerField()
+    helper_score = models.IntegerField()
+    bargain_price = models.IntegerField()
     class Meta:
         db_table = "items"
 

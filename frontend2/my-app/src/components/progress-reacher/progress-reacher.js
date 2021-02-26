@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./progress-reacher.css";
 import axios from "axios";
+import FeedbackReacher from "../feedback_reacher/feedback_reacher";
 
 // ID received from Rachita's code:
 var id = localStorage.getItem("jobId");
@@ -26,22 +27,29 @@ class ProgressBarExample2 extends React.Component {
     this.state = {
       progress: "started",
       percentage: 0,
+      feedback: false,
     };
 
     this.exampleReqs = this.exampleReqs.bind(this);
   }
 
   exampleReqs() {
-    axios.get("http://localhost:7000/items/" + id + "/", {}).then(
+    console.log(id);
+    axios.get("http://127.0.0.1:8000/api/jobs/" + id + "/", {}).then(
       (response) => {
-        console.log(response.data.data.status);
+        //console.log(response.data.data.status);
+        console.log(response.data.status);
 
-        if (response.data.data.status === "started") {
+        if (response.data.status === "started") {
           this.setState({ percentage: 0, progress: "has Started" });
-        } else if (response.data.data.status === "inprog") {
+        } else if (response.data.status === "inprog") {
           this.setState({ percentage: 50, progress: "is in progress" });
-        } else if (response.data.data.status === "completed") {
-          this.setState({ percentage: 100, progress: "is Done !" });
+        } else if (response.data.status === "completed") {
+          this.setState({
+            percentage: 100,
+            progress: "is Done !",
+            feedback: true,
+          });
         }
       },
       (error) => {
@@ -75,6 +83,11 @@ class ProgressBarExample2 extends React.Component {
           <br />
           <h3> Your job {this.state.progress}</h3>
         </center>
+        <br />
+        <br />
+        <br />
+        {/* prettier-ignore */}
+        {this.state.feedback ? <FeedbackReacher /> : <></>}
       </div>
     );
   }

@@ -137,9 +137,7 @@ class Register extends Component {
           <br />
           <br />
 
-          <Button color="info" onClick={this.register}>
-            Register
-          </Button>
+          <Button onClick={this.register}>Register</Button>
         </div>
       </div>
     );
